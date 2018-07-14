@@ -1,22 +1,39 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 
 namespace LifeGame
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            ulong i = 10;
-            ulong y = 10;
+            long x = 4;
+            long y = 4;
 
-            GameZone gz = new GameZone(i, y);
-            gz.initGameZone();
-            gz.Print();
+            var gz = new GameWorld(x, y);
+            var prevGz = gz;
+            var gp = new GameProcess();
 
+            ulong livePoints;
+            var isOptimal = false;
+
+            do
+            {
+                gz.Print();
+                gp.CopyWorld(gz, prevGz);
+                gz = gp.NextGeneration(prevGz);
+
+                isOptimal = gp.CmpWorld(gz, prevGz) == 0;
+                livePoints = gp.FindSurvivors(gz);
+
+
+                if (isOptimal) Console.WriteLine("Достигнута оптимальная конфигурация игрового мира");
+
+                if (livePoints == 0) Console.WriteLine("Все умерли");
+                Thread.Sleep(50);
+            } while (livePoints != 0 && !isOptimal);
         }
     }
 }
+
+
