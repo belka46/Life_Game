@@ -10,6 +10,13 @@ namespace LifeGame
     {
         static void Main(string[] args)
         {
+            ulong i = 10;
+            ulong y = 10;
+
+            GameZone gz = new GameZone(i, y);
+            gz.initGameZone();
+            gz.Print();
+
         }
     }
 }
